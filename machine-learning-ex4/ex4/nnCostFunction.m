@@ -40,6 +40,7 @@ Theta2_grad = zeros(size(Theta2));
 %         computed in ex4.m
 
 h = sigmoid([ones(m,1) sigmoid([ones(m,1) X] * Theta1')] * Theta2');
+
 y_vect = zeros(num_labels, m);
 for i=1:m,
     y_vect(y(i),i)=1;
@@ -63,6 +64,15 @@ J = J + lambda/(2*m) * (sum(sum(Theta1(:, 2:end).^2)) + sum(sum(Theta2(:, 2:end)
 %               over the training examples if you are implementing it for the 
 %               first time.
 %
+
+delta3 = (h - y_vect');
+
+delta2 = (h - y_vect') * Theta2(:, 2:end) .* sigmoidGradient(X * Theta1(:, 2:end)');
+
+% for t = 1:m
+%     delta3 = sigmoid(Theta2 *  - y_vect(:, t);
+    
+
 % Part 3: Implement regularization with the cost function and gradients.
 %
 %         Hint: You can implement this around the code for
