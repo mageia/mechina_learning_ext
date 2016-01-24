@@ -41,12 +41,15 @@ Theta2_grad = zeros(size(Theta2));
 
 h = sigmoid([ones(m,1) sigmoid([ones(m,1) X] * Theta1')] * Theta2');
 
-y_vect = zeros(num_labels, m);
-for i=1:m,
-    y_vect(y(i),i)=1;
-end
-J = (-1/m) * sum(sum(y_vect' .* log(h) + (1-y_vect') .* log(1-h)));
+% y_vect = zeros(num_labels, m);
+% for i=1:m,
+%     y_vect(y(i),i)=1;
+% end
 
+yd = eye(num_labels);
+y = yd(y, :);
+
+J = (-1/m) * sum(sum(y .* log(h) + (1-y) .* log(1-h)));
 J = J + lambda/(2*m) * (sum(sum(Theta1(:, 2:end).^2)) + sum(sum(Theta2(:, 2:end).^2)));
 
 % Part 2: Implement the backpropagation algorithm to compute the gradients
@@ -65,12 +68,9 @@ J = J + lambda/(2*m) * (sum(sum(Theta1(:, 2:end).^2)) + sum(sum(Theta2(:, 2:end)
 %               first time.
 %
 
-delta3 = (h - y_vect');
-
-delta2 = (h - y_vect') * Theta2(:, 2:end) .* sigmoidGradient(X * Theta1(:, 2:end)');
-
-% for t = 1:m
-%     delta3 = sigmoid(Theta2 *  - y_vect(:, t);
+delta2 = (h - y) * Theta2 .* sigmoidGradient([ones(m,1) [ones(m,1) X] * Theta1']);
+Theta1_grad = (1/m) .* delta2(:, 2:end)' * [ones(m,1) X];
+Theta2_grad = (1/m) .* (h-y)' * sigmoidGradient([ones(m,1) [ones(m,1) X] * Theta1']);
     
 
 % Part 3: Implement regularization with the cost function and gradients.
